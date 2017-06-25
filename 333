@@ -1,1 +1,128 @@
-你好呀。master
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>ExtJS</title>
+<link rel="stylesheet" type="text/css" href="../extjs-master/resources/css/ext-all.css" />
+<!-- <script type="text/javascript" src="ext-base.js"></script> -->
+<script type="text/javascript" src="../extjs-master/ext-all.js"></script>
+<script>
+	Ext.onReady(function(){
+		// 所有列都以百分数配置 -- 他们总和必须为1
+		// The data store containing the list of states
+		var store=Ext.create('Ext.data.Store', {
+			storeId:'simpsonsStore',
+			fields:['name', 'email', 'phone'],
+			data:{'items':[
+				{ 'name': 'Lisa',  "email":"lisa@simpsons.com",  "phone":"555-111-1224"  },
+				{ 'name': 'Bart',  "email":"bart@simpsons.com",  "phone":"555-222-1234" },
+				{ 'name': 'Homer', "email":"home@simpsons.com",  "phone":"555-222-1244"  },
+				{ 'name': 'Marge', "email":"marge@simpsons.com", "phone":"555-222-1254"  }
+			]},
+			proxy: {
+				type: 'memory',
+				reader: {
+					type: 'json',
+					root: 'items'
+				}
+			}
+		});
+
+		var grid=Ext.create('Ext.grid.Panel', {
+			title: 'Simpsons',
+			//store: Ext.data.StoreManager.lookup('simpsonsStore'),
+			store: store,
+			columns: [
+				{ header: 'Name',  dataIndex: 'name' },
+				{ header: 'Email', dataIndex: 'email', flex: 1 },
+				{ header: 'Phone', dataIndex: 'phone' }
+			],
+			height: 200,
+			width: 400,
+			renderTo: Ext.getBody()
+		});
+
+		// // grid.on('mouseover',function(e){  
+		// grid.on('itemclick',function(view,records,item,index,e){  
+		// 	// console.log(view,records,item,index,e);
+		// 	console.log(records,111);
+		// 	// var index = grid.getView().findRowIndex(e.getTarget());  
+		// 	var index = index;  
+		// 	//alert("index ======" + index);  
+		// 	if(index >= 0){  
+		// 	var record = store.getAt(index);  
+		// 	var sr = Ext.encode(record.data.name);//grid每行需要展示的数据  
+		// 	var st = sr.substring(1,sr.length-1);  
+		// 	var str;  
+		// 	console.log(record,sr,st);
+		// 	if(st.length == 0){  
+		// 	str = "";  
+		// 	}else{  
+		// 	str = st;  
+		// 	}  
+
+		// 	var rowEl = Ext.get(e.getTarget());  
+		// 	console.log(e,rowEl)
+		// 	rowEl.set({  
+		// 		'ext:qtip': '<div style="font-size: 12;">'+ str +'</div>',  
+		// 		'ext:qwidth':200,  
+		// 		'ext:qtitle':'<b>说明:<b></br>',  
+		// 		'ext:qclass': ''  
+		// 		},false);  
+		// 	}  
+		// });  
+
+		// grid.getView().on("render",function(view){  
+			grid.getView().on('itemmouseenter',function(view,records,item,index,e){  
+				console.log(view,records,item,index,e);
+		    view.tip=Ext.create('Ext.tip.ToolTip',{  
+		        target:view.el,  
+		        delegate:view.itemSelector,  
+		        trackMouse:true,  
+		        renderTo:Ext.getBody(),  
+		        listeners:{  
+		           beforeshow:function(tip){  
+		               var record=view.getRecord(tip.triggerElement);  
+		               var html=createTip(record.get("name"),record.get("email"),record.get("phone"),'aaa.png');  
+		               tip.update(html);  
+		           }  
+		        }  
+		      
+		    });  
+		});  
+		  
+		function createTip(name,email,phone,photo){  
+		    // var html='<div>'+  
+		    //           '<img src="'+photo+'" style="width:100px;height:100px;"/>'+  
+		    //           '<div style="float:right">'+  
+		    //              '<table> '+  
+		    //                ' <tr>'+  
+		    //                   ' <td>姓名：</td><td>'+name+'</td>'+  
+		    //                ' </tr>'+  
+		    //                ' <tr>'+  
+		    //                   ' <td>邮箱：</td><td>'+email+'</td>'+  
+		    //                ' </tr>'+  
+		    //                ' <tr>'+  
+		    //                  ' <td>电话：</td><td>'+phone+'</td>'+  
+		    //                ' </tr>'+  
+		    //                ' <tr>'+  
+		    //                  ' <td>地址：</td><td>'+name+'</td>'+  
+		    //                ' </tr>'+  
+		    //                ' <tr>'+  
+		    //                  ' <td>机构：</td><td>'+name+'</td>'+  
+		    //                ' </tr>'+  
+		    //             ' </table>'+  
+		    //           '</div>'+  
+		    //         '</div>';  
+		     var html='<span>'+'双击查看详情'+
+		            '</span>';  
+		    return html;  
+		}  
+
+
+	})
+</script>
+</head>
+<body>
+</body>
+</html>
